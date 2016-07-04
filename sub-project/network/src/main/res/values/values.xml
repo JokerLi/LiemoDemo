@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="btn_green_pressed">#30A32C</color>
+    <color name="btn_grey_normal">#808080</color>
+    <color name="btn_green_normal">#36B531</color>
+
+    <color name="circle_red">#cc0033</color>
+</resources>

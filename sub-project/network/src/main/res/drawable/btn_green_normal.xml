@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/btn_green_normal" />
+    <corners android:radius="2dp" />
+</shape><!-- From: file:/home/admin1/code/git-svn/cmlocker_sdk_bj_fb/CMLockerSDKNew/cmlockersdk/src/main/res/drawable/btn_green_normal.xml -->

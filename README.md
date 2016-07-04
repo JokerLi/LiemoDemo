@@ -1,2 +1,0 @@
-# LiemoDemo
-Liemo Test Demo

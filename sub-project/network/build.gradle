@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v4:23.2.0'
+    compile(name:'volley', ext:'aar')
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion '22.0.1'
+
+    sourceSets{
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/res']
+//            resources.srcDirs = ['src/res']
+//            assets.srcDirs = ['assets']
+//            jniLibs.srcDirs = ['libs']
+//            renderscript.srcDirs = ['src', 'sub-src/KDidSdk/src', 'sub-src/KMsgSdk/src']
+        }
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+}

@@ -1,0 +1,12 @@
+.gradle
+/gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+LiemoApp.iml
+gradlew
+gradlew.bat
+gradle.properties
+

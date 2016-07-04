@@ -1,0 +1,14 @@
+[
+  {
+    "name" : "Users",
+    "action" : "ACTIVITY",
+    "url" : "com.ijinshan.liemo.activities.WelcomeActivity",
+    "icon" : "assets#users.png"
+  },
+  {
+    "name" : "Settings",
+    "action" : "ACTIVITY",
+    "url" : "com.ijinshan.liemo.activities.WelcomeActivity",
+    "icon" : "assets#settings.png"
+  }
+]

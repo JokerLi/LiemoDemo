@@ -1,0 +1,59 @@
+/*btnOk.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mCallback = new MyImageCallback("http://pic.cnblogs.com/avatar/a453160.jpg?id=24201045");
+                Bundle args = new Bundle();
+                Intent intent = new Intent(MainActivity.this, ImageService.class);
+                intent.putExtras(args);
+                bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                unbindService(mConnection);
+            }
+        });
+        btnCallBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });*/
+
+
+            class MyImageCallback extends ImageCallback.Stub {
+                String mUrl;
+
+                MyImageCallback(String url) {
+                    mUrl = url;
+                }
+
+                @Override
+                public String getImageUrl() throws RemoteException {
+                    return mUrl;
+                }
+
+                @Override
+                public void onImageLoaded(String url, String path) throws RemoteException {
+                }
+
+                @Override
+                public void onImageError(int errorCode) throws RemoteException {
+
+                }
+            }
+
+            private ImageCallback mCallback = null;
+            ImageLoadService mService;
+            private ServiceConnection mConnection = new ServiceConnection() {
+                public void onServiceConnected(ComponentName className,
+                                               IBinder service) {
+                    mService = ImageLoadService.Stub.asInterface(service);
+                    try {
+                        mService.registerCallBack(mCallback);
+                    } catch (RemoteException e) {
+                    }
+                }
+
+                public void onServiceDisconnected(ComponentName className) {
+                    mService = null;
+                }
+            };
