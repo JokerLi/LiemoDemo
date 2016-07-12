@@ -53,6 +53,10 @@
             android:name="com.ijinshan.liemo.activities.MainActivity"
             android:label="@string/app_name" />
 
+        <activity
+            android:name="com.ijinshan.liemo.activities.VPNActivity"
+            android:label="@string/app_name" />
+
         <service android:name="com.ijinshan.liemo.ImageService" />
 
         <provider

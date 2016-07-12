@@ -3,6 +3,7 @@ package com.ijinshan.liemo.activities;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -40,7 +42,20 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         initDragLayout();
         initListView();
         initFragmentView();
+        initVPNButton();
         getLoaderManager().initLoader(1, null, this);
+    }
+
+    private void initVPNButton() {
+        findViewById(R.id.vpn_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, VPNActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void inittest() {

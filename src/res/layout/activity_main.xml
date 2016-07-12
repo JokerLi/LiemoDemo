@@ -75,6 +75,13 @@
                     android:textSize="20sp" />
             </RelativeLayout>
 
+            <Button
+                android:id="@+id/vpn_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="vpn"
+                />
+
             <ListView
                 android:id="@+id/content_listview"
                 android:layout_width="match_parent"
