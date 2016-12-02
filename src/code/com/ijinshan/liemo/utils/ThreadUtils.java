@@ -12,64 +12,61 @@ public class ThreadUtils {
 
     private static final Object sLock = new Object();
 
-    private static boolean sWillOverride = false;
-
     private static Handler sUiThreadHandler = null;
 
-    //private static ArrayDeque<Runnable> mWaitingRunnables = new ArrayDeque<Runnable>();
-
-    private static boolean serialUIExcutorPermitted = true;
-
-//    public static void setWillOverrideUiThread() {
-//        synchronized (sLock) {
-//            sWillOverride = true;
-//        }
-//    }
-
-//    public static void setUiThread(Looper looper) {
-//        synchronized (sLock) {
-//            if (sUiThreadHandler != null && sUiThreadHandler.getLooper() != looper) {
-//                throw new RuntimeException("UI thread looper is already set to " +
-//                        sUiThreadHandler.getLooper() + " (Main thread looper is " +
-//                        Looper.getMainLooper() + "), cannot set to new looper " + looper);
-//            } else {
-//                sUiThreadHandler = new Handler(looper);
-//            }
-//        }
-//    }
-
     private static HandlerThread mHandlerThread;
-    private static Handler mhandler;
+    private static Handler mHandler;
+
+    private static HandlerThread mHttpHandlerThread;
+    private static Handler mHttpHandler;
+
+    private static void ensureHttpThreadLocked() {
+        if (null == mHttpHandlerThread) {
+            mHttpHandlerThread = new HandlerThread("NetworkThread");
+            mHttpHandlerThread.start();
+            mHttpHandler = new Handler(mHttpHandlerThread.getLooper());
+        }
+    }
+
+    public static void postInHttpThread(final Runnable runnable) {
+        ensureHttpThreadLocked();
+        mHttpHandler.post(runnable);
+    }
+
+    public static void postDelayInHttpThread(final Runnable runnable, long delayMillis) {
+        ensureHttpThreadLocked();
+        mHttpHandler.postDelayed(runnable, delayMillis);
+    }
+
 
     private static void ensureThreadLocked() {
         if (null == mHandlerThread) {
-            mHandlerThread = new HandlerThread("ResumeThread");
+            mHandlerThread = new HandlerThread("CustomThread");
             mHandlerThread.start();
-            ;
-            mhandler = new Handler(mHandlerThread.getLooper());
+            mHandler = new Handler(mHandlerThread.getLooper());
         }
     }
 
     public static void post(final Runnable runnable) {
         ensureThreadLocked();
-        mhandler.post(runnable);
+        mHandler.post(runnable);
     }
 
     public static void postDelay(final Runnable runnable, long delayMillis) {
         ensureThreadLocked();
-        mhandler.postDelayed(runnable, delayMillis);
+        mHandler.postDelayed(runnable, delayMillis);
     }
 
-    public static Handler getUiThreadHandler() {
-        synchronized (sLock) {
-            if (sUiThreadHandler == null) {
-                if (sWillOverride) {
-                    throw new RuntimeException("Did not yet override the UI thread");
+    private static Handler getUiThreadHandler() {
+        if(sUiThreadHandler == null) {
+            synchronized (sLock) {
+                if (sUiThreadHandler == null) {
+                    sUiThreadHandler = new Handler(Looper.getMainLooper());
                 }
-                sUiThreadHandler = new Handler(Looper.getMainLooper());
+
             }
-            return sUiThreadHandler;
         }
+        return sUiThreadHandler;
     }
 
     /**
@@ -213,50 +210,4 @@ public class ThreadUtils {
         return getUiThreadHandler().getLooper() == Looper.myLooper();
     }
 
-//    public static Looper getUiThreadLooper() {
-//        return getUiThreadHandler().getLooper();
-//    }
-
-    /**
-     * Set thread priority to audio.
-     */
-//    public static void setThreadPriorityAudio(int tid) {
-//      Process.setThreadPriority(tid, Process.THREAD_PRIORITY_AUDIO);
-//    }
-
-//    public static void setUISerialExecutorPermitted(boolean permitted) {
-//        if (permitted) {
-//            serialUIExcutorPermitted = true;
-//            startUISerialExecutor();
-//        } else {
-//            serialUIExcutorPermitted = false;
-//        }
-//    }
-
-//    private static void startUISerialExecutor() {
-//        ThreadUtils.runOnUiThread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                if (serialUIExcutorPermitted) {
-//                    Runnable r;
-//                    synchronized(mWaitingRunnables) {
-//                        r = mWaitingRunnables.pollFirst();
-//                    }
-//                    if (r != null) {
-//                        r.run();
-//                        startUISerialExecutor();
-//                    }
-//                }
-//            }
-//
-//        });
-//    }
-
-//    public static void addOnUISerialExecutor(Runnable r) {
-//        synchronized(mWaitingRunnables) {
-//            mWaitingRunnables.add(r);
-//        }
-//        startUISerialExecutor();
-//    }
 }

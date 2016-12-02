@@ -1,128 +1,47 @@
 package com.ijinshan.liemo.activities;
 
 import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
-import com.ijinshan.liemo.contentproviders.MyCursorLoader;
-import com.ijinshan.liemo.contentproviders.UriMatchHelper;
 import com.ijinshan.liemo.controllers.OptionController;
-import com.ijinshan.liemo.fragments.TitleFragment;
 import com.ijinshan.liemo.views.DragLayout;
+import com.ijinshan.liemo.views.render.CommonViewRender;
+import com.ijinshan.liemo.views.render.CommonViewTemplate;
+import com.ijinshan.liemo.views.render.ICommonViewData;
 import com.ijinshan.liemoapp.R;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends Activity{
     private DragLayout mDragLayout;
     private ListView mOptionListView;
     private OptionController mOptionController;
     private ListView mListView;
-    private SimpleCursorAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initControllers();
+        initView();
+        initOptionListView();
         initDragLayout();
         initListView();
-        initFragmentView();
-        initVPNButton();
-        getLoaderManager().initLoader(1, null, this);
     }
 
-    private void initVPNButton() {
-        findViewById(R.id.vpn_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, VPNActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
-        });
-    }
-
-    private void inittest() {
-        Log.e("hehehehe", "test" + UriMatchHelper.getElements("content://liemo.test.setting.provider/elements"));
-        ContentResolver resolver= getContentResolver();
-        Uri uri = Uri.parse("content://liemo.test.setting.provider/elements");
-        resolver.registerContentObserver(uri, false, new MyObserver(new Handler(Looper.getMainLooper())));
-        resolver.registerContentObserver(uri, false, new MyObserver(new Handler(Looper.getMainLooper())));
-        resolver.query(uri, null, null, null, null);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(getApplicationContext());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        mAdapter = new SimpleCursorAdapter(MainActivity.this,R.layout.contacts_list_item,
-                cursor, new String[]{ContactsContract.Contacts.DISPLAY_NAME},new int[]{android.R.id.text1});
-        mListView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
-    private class MyObserver extends ContentObserver{
-
-        /**
-         * Creates a content observer.
-         *
-         * @param handler The handler to run {@link #onChange} on, or null if none.
-         */
-        public MyObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            Log.e("hehehehe", "test" + selfChange);
-        }
-    }
-
-    private TitleFragment mTitleFragment;
-    private void initFragmentView() {
-//        FragmentManager manager = getFragmentManager();
-//        FragmentTransaction transaction = manager.beginTransaction();
-//
-//        mTitleFragment = new TitleFragment();
-//        transaction.replace(R.id.id_title, mTitleFragment);
-//        transaction.commit();
-    }
-
-    private void initControllers() {
-        mOptionController = new OptionController();
-    }
-
-    private void initListView(){
+    private void initView() {
         mOptionListView = (ListView) findViewById(R.id.option_listview);
-        mOptionController.bindData(mOptionListView);
         mListView = (ListView)findViewById(R.id.content_listview);
+        mDragLayout = (DragLayout) findViewById(R.id.main_draglayout);
     }
 
     private void initDragLayout() {
-        mDragLayout = (DragLayout) findViewById(R.id.main_draglayout);
         mDragLayout.setDragListener(new DragLayout.DragListener() {
             @Override
             public void onOpen() {
@@ -138,4 +57,135 @@ public class MainActivity extends Activity implements LoaderManager.LoaderCallba
         });
     }
 
+    private void initOptionListView() {
+        mOptionController = new OptionController();
+        mOptionController.bindData(mOptionListView);
+    }
+
+    private void initListView(){
+        List<ICommonViewData> list = getInitedListData();
+        mListView.setAdapter(new DataAdapter(list));
+    }
+
+    private List<ICommonViewData> getInitedListData() {
+        List<ICommonViewData> dataList = new ArrayList<ICommonViewData>();
+        dataList.add(new Data("Loading View", VPNActivity.class.getName()));
+        return dataList;
+    }
+
+    private class DataAdapter extends BaseAdapter {
+        List<ICommonViewData> mList;
+        CommonViewTemplate mTemplate;
+        DataAdapter(List<ICommonViewData> list){
+            mList = new ArrayList<ICommonViewData>();
+            mList.addAll(list);
+            mTemplate = new CommonViewTemplate.Builder(R.layout.main_list_item)
+                    .titleId(R.id.title)
+                    .build();
+        }
+
+        @Override
+        public int getCount() {
+            return mList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            CommonViewRender render = null;
+            if(convertView == null || convertView.getTag() == null
+                    || !(convertView.getTag() instanceof CommonViewRender)){
+                render = new CommonViewRender(MainActivity.this.getApplicationContext(), mTemplate);
+            }else{
+                render = (CommonViewRender)convertView.getTag();
+            }
+            ICommonViewData data = mList.get(position);
+            convertView = render.getBindedView(data);
+            data.registerView(convertView);
+            convertView.setTag(render);
+            return convertView;
+        }
+    }
+
+    private class Data implements ICommonViewData{
+        String mTitle;
+        String mClassName;
+        Data(String title, String className){
+            mTitle = title;
+            mClassName = className;
+        }
+
+        @Override
+        public void registerView(View view) {
+            setListener(view, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(mClassName);
+                }
+            });
+        }
+
+        public void setListener(View view,View.OnClickListener onClickListener){
+            if(view == null){
+                return;
+            }
+            view.setOnClickListener(onClickListener);
+            if(view instanceof ViewGroup){
+                ViewGroup vp = (ViewGroup) view;
+                for(int i = 0; i < vp.getChildCount(); i++){
+                    View childView = vp.getChildAt(i);
+                    setListener(childView, onClickListener);
+                }
+            }
+        }
+
+        public void startActivity(String entry) {
+            try {
+                Class activityClass = Class.forName(entry);
+                Intent intent = new Intent(MainActivity.this, activityClass);
+                MainActivity.this.startActivity(intent);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public CharSequence getTitle() {
+            return mTitle;
+        }
+
+        @Override
+        public CharSequence getBody() {
+            return null;
+        }
+
+        @Override
+        public CharSequence getSmallBody() {
+            return null;
+        }
+
+        @Override
+        public CharSequence getButton() {
+            return null;
+        }
+
+        @Override
+        public String getIcon() {
+            return null;
+        }
+
+        @Override
+        public String getImageUrl() {
+            return null;
+        }
+    }
 }

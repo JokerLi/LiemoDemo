@@ -24,6 +24,9 @@ public class MyCursorLoader extends CursorLoader {
      */
     @Override
     protected Cursor onLoadInBackground() {
+        if(true){
+            return null;
+        }
         Cursor cursor = mContext.getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
                 mContactProjection, null, null, null);
         return cursor;

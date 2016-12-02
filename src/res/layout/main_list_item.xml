@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dip"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="8dip">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="3dip"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="#000000"
+        android:textSize="25sp" />
+</LinearLayout>
