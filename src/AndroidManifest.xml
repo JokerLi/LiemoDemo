@@ -54,6 +54,10 @@
             android:label="@string/app_name" />
 
         <activity
+            android:name="com.ijinshan.liemo.activities.LoadingViewActivity"
+            android:label="@string/app_name" />
+
+        <activity
             android:name="com.ijinshan.liemo.activities.VPNActivity"
             android:label="@string/app_name" />
 

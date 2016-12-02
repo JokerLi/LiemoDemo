@@ -69,7 +69,7 @@ public class MainActivity extends Activity{
 
     private List<ICommonViewData> getInitedListData() {
         List<ICommonViewData> dataList = new ArrayList<ICommonViewData>();
-        dataList.add(new Data("Loading View", VPNActivity.class.getName()));
+        dataList.add(new Data("Loading View", LoadingViewActivity.class.getName()));
         return dataList;
     }
 
