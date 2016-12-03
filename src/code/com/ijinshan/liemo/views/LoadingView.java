@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -82,14 +81,12 @@ public class LoadingView extends View {
         Path path = new Path();
         RectF oval = new RectF(-30,-30,30,30);
         int startAngle = -9 * mIndex;
+        int sweepAngle = 4 * (Math.abs(mIndexLong - 30) + 15) - 10;
 
-        int sweepAngle = 8 * (Math.abs(mIndexLong - 30) + 5);
         path.addArc(oval, startAngle, sweepAngle);
-
         canvas.drawPath(path,mPaint);
 
-
-        mHandler.sendEmptyMessageDelayed(MESS, 25);
+        mHandler.sendEmptyMessageDelayed(MESS, 20);
     }
 
 }
