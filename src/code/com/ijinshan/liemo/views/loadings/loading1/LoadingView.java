@@ -1,4 +1,4 @@
-package com.ijinshan.liemo.views;
+package com.ijinshan.liemo.views.loadings.loading1;
 
 import android.content.Context;
 import android.graphics.Canvas;
