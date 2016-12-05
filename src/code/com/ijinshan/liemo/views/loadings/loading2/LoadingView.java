@@ -9,6 +9,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 
+import com.ijinshan.liemo.utils.DimenSdkUtils;
+
 /**
  * Created by Li Guoqing on 2016/12/2.
  */
@@ -38,7 +40,9 @@ public class LoadingView extends RelativeLayout {
 
     private void initPaint(){
         mShapeView = new LoadingShapeView(getContext());
-        mShapeView.setLayoutParams(new RelativeLayout.LayoutParams(100, 100));
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(DimenSdkUtils.dp2px(30), DimenSdkUtils.dp2px(30));
+        params.addRule(CENTER_IN_PARENT);
+        mShapeView.setLayoutParams(params);
         addView(mShapeView);
         freeFall();
     }
